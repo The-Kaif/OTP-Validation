@@ -107,18 +107,24 @@ function OtpLayout(props: OtpLayoutType) {
             setInput5(e.target.value)
             // Concat all input data
             let tempVal = input1 + input2 + input3 + input4 + e.target.value
-            // Check with OTP value
-            if (tempVal === value) {
-                setMessage("OTP sent successfully")
-                document.getElementById("Input5")?.blur()
-                setTimeout(function () {
-                    alert("Component Will Unmount")
-                    window.location.reload()
-                }, 1000)
+            // When time is not equal to zero then match otherwise so alerts
+            if (timer !== 0) {
+                // Check with OTP value
+                if (tempVal === value) {
+                    setMessage("OTP sent successfully")
+                    document.getElementById("Input5")?.blur()
+                    setTimeout(function () {
+                        alert("Component Will Unmount")
+                        window.location.reload()
+                    }, 1000)
+                } else {
+                    setMessage("OTP is incorrect")
+                    document.getElementById("Input5")?.blur()
+                }
             } else {
-                setMessage("OTP is incorrect")
-                document.getElementById("Input5")?.blur()
+                alert("Your OTP is expire please click on Resend OTP")
             }
+
         } else if (e.target.value.length === 0) {
             setInput5("")
             document.getElementById("Input4")?.focus()
