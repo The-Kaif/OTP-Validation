@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-
+import React, { memo, useEffect, useState } from 'react'
 import "./OtpLayout.css"
 // Type Define
 type OtpLayoutType = {
@@ -27,7 +26,6 @@ function OtpLayout(props: OtpLayoutType) {
     //flag UseState for check when user press resend buttton
     const [flag, setFlag] = useState(false);
 
-
     useEffect(() => {
         // When page render so focus on first input box
         if (input1 === "") {
@@ -45,7 +43,7 @@ function OtpLayout(props: OtpLayoutType) {
             clearInterval(time)
             setDisable(false)
         }
-        // When any input box value is blank then remove message
+        // When any input box value is blank then remove alert message
         if (input1 === "" || input2 === "" || input3 === "" || input4 === "" || input5 === "") {
             setMessage("")
         }
@@ -139,7 +137,7 @@ function OtpLayout(props: OtpLayoutType) {
             setTimer(60)
             // Call OTP generate method
             props.method()
-            // Set into state
+            // Set value into state
             setValue(JSON.stringify(props.otp))
             setFlag(true)
             // Make Input fields blank
@@ -171,11 +169,11 @@ function OtpLayout(props: OtpLayoutType) {
                             <p>Enter Your Code Here : </p>
                             {/* All Input Fields */}
                             <div className='inputDiv'>
-                                <input value={input1} onChange={input1Handler} maxLength={1} id="Input1" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "normal" : "rightVal"} />
-                                <input value={input2} onChange={input2Handler} maxLength={1} id="Input2" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "normal" : "rightVal"} />
-                                <input value={input3} onChange={input3Handler} maxLength={1} id="Input3" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "normal" : "rightVal"} />
-                                <input value={input4} onChange={input4Handler} maxLength={1} id="Input4" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "normal" : "rightVal"} />
-                                <input value={input5} onChange={input5Handler} maxLength={1} id="Input5" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "normal" : "rightVal"} />
+                                <input value={input1} onChange={input1Handler} maxLength={1} id="Input1" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "" : "rightVal"} />
+                                <input value={input2} onChange={input2Handler} maxLength={1} id="Input2" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "" : "rightVal"} />
+                                <input value={input3} onChange={input3Handler} maxLength={1} id="Input3" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "" : "rightVal"} />
+                                <input value={input4} onChange={input4Handler} maxLength={1} id="Input4" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "" : "rightVal"} />
+                                <input value={input5} onChange={input5Handler} maxLength={1} id="Input5" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "" : "rightVal"} />
                             </div>
                             {/* Alert Message Content */}
                             {message !== "" ? <p className={message === "OTP is incorrect" ? "wrong" : "right"}>{message}</p> : null}
@@ -192,9 +190,8 @@ function OtpLayout(props: OtpLayoutType) {
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }
 
-export default OtpLayout
+export default memo(OtpLayout) 

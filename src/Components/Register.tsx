@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import OtpLayout from './OtpLayout'
 
 function Register() {
@@ -14,7 +14,7 @@ function Register() {
     return (
         <div>
             <center>
-                <h1 className='mt-4'>Register</h1>
+                <h1 className='mt-4'>Home Page</h1>
                 {/* Pass value and method as props in OtpLayout Component*/}
                 <OtpLayout otp={otp} method={GenerateOTP} />
             </center>
@@ -22,4 +22,4 @@ function Register() {
     )
 }
 
-export default Register
+export default memo(Register) 
