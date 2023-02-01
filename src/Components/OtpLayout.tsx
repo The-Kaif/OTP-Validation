@@ -17,7 +17,7 @@ function OtpLayout(props: OtpLayoutType) {
 
     const [count, setCount] = useState(5)
 
-    const [alert, setAlert] = useState("")
+    const [message, setMessage] = useState("")
 
     const [disable, setDisable] = useState(true)
 
@@ -40,64 +40,80 @@ function OtpLayout(props: OtpLayoutType) {
 
     }, [timer, disable, flag])
     const input1Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value.length === 1) {
+        if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
             setInput1(e.target.value)
-            console.log(e.target.value)
         } if (e.target.value.length >= 1) {
             document.getElementById("Input2")?.focus()
+        } else if (e.target.value.length === 0) {
+            setInput1("")
         }
     }
     const input2Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value.length === 1) {
+        if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
             setInput2(e.target.value)
         } if (e.target.value.length >= 1) {
             document.getElementById("Input3")?.focus()
         } else if (e.target.value.length === 0) {
+            setInput2("")
             document.getElementById("Input1")?.focus()
         }
     }
     const input3Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value.length === 1) {
+        if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
             setInput3(e.target.value)
         } if (e.target.value.length >= 1) {
             document.getElementById("Input4")?.focus()
         } else if (e.target.value.length === 0) {
+            setInput3("")
             document.getElementById("Input2")?.focus()
         }
     }
     const input4Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value.length === 1) {
+        if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
             setInput4(e.target.value)
         } if (e.target.value.length >= 1) {
             document.getElementById("Input5")?.focus()
         } else if (e.target.value.length === 0) {
+            setInput4("")
             document.getElementById("Input3")?.focus()
         }
     }
     const input5Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value.length === 1) {
+        if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
             setInput5(e.target.value)
             let tempVal = input1 + input2 + input3 + input4 + e.target.value
             if (tempVal === value) {
-                setAlert("OTP sent successfully")
+                setMessage("OTP sent successfully")
+                document.getElementById("Input5")?.blur()
             } else {
-                setCount((val) => --val)
-                setAlert("OTP is incorrect")
+                setMessage("OTP is incorrect")
+                document.getElementById("Input5")?.blur()
             }
         } else if (e.target.value.length === 0) {
+            setInput5("")
             document.getElementById("Input4")?.focus()
         }
 
     }
     const resendHandler = () => {
-        props.method()
-        setValue(JSON.stringify(props.otp))
-        setFlag(true)
-        setInput1("");
-        setInput2("");
-        setInput3("");
-        setInput4("");
-        setInput5("");
+
+        if (count !== 0) {
+            alert("Resend OTP sent successfully!")
+            setDisable(true)
+            setCount((val) => --val)
+            setTimer(60)
+            props.method()
+            setValue(JSON.stringify(props.otp))
+            setFlag(true)
+            setInput1("");
+            setInput2("");
+            setInput3("");
+            setInput4("");
+            setInput5("");
+        } else {
+            alert("Resend OTP Limit exceed!!!")
+        }
+
     }
     return (
         <div>
@@ -115,13 +131,13 @@ function OtpLayout(props: OtpLayoutType) {
                         <div className="modal-body">
                             <p>Enter Your Code Here : </p>
                             <div className='inputDiv'>
-                                <input value={input1} onChange={input1Handler} autoFocus id="Input1" type={"number"} />
-                                <input value={input2} onChange={input2Handler} id="Input2" type={"number"} />
-                                <input value={input3} onChange={input3Handler} id="Input3" type={"number"} />
-                                <input value={input4} onChange={input4Handler} id="Input4" type={"number"} />
-                                <input value={input5} onChange={input5Handler} id="Input5" type={"number"} />
+                                <input value={input1} onChange={input1Handler} maxLength={1} id="Input1" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "normal" : "rightVal"} />
+                                <input value={input2} onChange={input2Handler} maxLength={1} id="Input2" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "normal" : "rightVal"} />
+                                <input value={input3} onChange={input3Handler} maxLength={1} id="Input3" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "normal" : "rightVal"} />
+                                <input value={input4} onChange={input4Handler} maxLength={1} id="Input4" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "normal" : "rightVal"} />
+                                <input value={input5} onChange={input5Handler} maxLength={1} id="Input5" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "normal" : "rightVal"} />
                             </div>
-                            {alert !== "" ? <p className={alert === "OTP is incorrect" ? "wrong" : "right"}>{alert}</p> : null}
+                            {message !== "" ? <p className={message === "OTP is incorrect" ? "wrong" : "right"}>{message}</p> : null}
                         </div>
                         <div className="modal-footer">
                             <div className='resendBtn'>

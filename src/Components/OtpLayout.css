@@ -26,6 +26,10 @@
   border: 2px solid green;
 }
 
+.normal {
+  border: 1px solid black;
+}
+
 .resendBtn {
   float: left;
   margin-right: 11em;
