@@ -22,6 +22,8 @@ function OtpLayout(props: OtpLayoutType) {
     const [disable, setDisable] = useState(true)
 
     const [timer, setTimer] = useState(10);
+
+    const [flag, setFlag] = useState(false)
     useEffect(() => {
         if (input1 === "") {
             document.getElementById("Input1")?.focus()
@@ -36,7 +38,7 @@ function OtpLayout(props: OtpLayoutType) {
             setDisable(false)
         }
 
-    }, [timer, disable, value])
+    }, [timer, disable, flag])
     const input1Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value.length === 1) {
             setInput1(e.target.value)
@@ -90,6 +92,7 @@ function OtpLayout(props: OtpLayoutType) {
     const resendHandler = () => {
         props.method()
         setValue(JSON.stringify(props.otp))
+        setFlag(true)
         setInput1("");
         setInput2("");
         setInput3("");
