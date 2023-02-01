@@ -1,0 +1,32 @@
+#Input1,
+#Input2,
+#Input3,
+#Input4,
+#Input5 {
+  width: 4em;
+  padding: 10px;
+  margin: 10px;
+  text-align: center;
+}
+
+.wrong,
+.timer {
+  color: red;
+}
+
+.right {
+  color: green;
+}
+
+.wrongVal {
+  border: 2px solid red;
+}
+
+.rightVal {
+  border: 2px solid green;
+}
+
+.resendBtn {
+  float: left;
+  margin-right: 11em;
+}
