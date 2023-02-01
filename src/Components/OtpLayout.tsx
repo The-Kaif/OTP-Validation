@@ -21,7 +21,7 @@ function OtpLayout(props: OtpLayoutType) {
 
     const [disable, setDisable] = useState(true)
 
-    const [timer, setTimer] = useState(10);
+    const [timer, setTimer] = useState(60);
 
     const [flag, setFlag] = useState(false)
     useEffect(() => {
@@ -115,11 +115,11 @@ function OtpLayout(props: OtpLayoutType) {
                         <div className="modal-body">
                             <p>Enter Your Code Here : </p>
                             <div className='inputDiv'>
-                                <input onChange={input1Handler} autoFocus id="Input1" type={"number"} />
-                                <input onChange={input2Handler} id="Input2" type={"number"} />
-                                <input onChange={input3Handler} id="Input3" type={"number"} />
-                                <input onChange={input4Handler} id="Input4" type={"number"} />
-                                <input onChange={input5Handler} id="Input5" type={"number"} />
+                                <input value={input1} onChange={input1Handler} autoFocus id="Input1" type={"number"} />
+                                <input value={input2} onChange={input2Handler} id="Input2" type={"number"} />
+                                <input value={input3} onChange={input3Handler} id="Input3" type={"number"} />
+                                <input value={input4} onChange={input4Handler} id="Input4" type={"number"} />
+                                <input value={input5} onChange={input5Handler} id="Input5" type={"number"} />
                             </div>
                             {alert !== "" ? <p className={alert === "OTP is incorrect" ? "wrong" : "right"}>{alert}</p> : null}
                         </div>
