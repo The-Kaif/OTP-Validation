@@ -2,11 +2,7 @@
   margin-top: 3em;
 }
 /* Input Field CSS */
-#Input1,
-#Input2,
-#Input3,
-#Input4,
-#Input5 {
+#input {
   width: 4em;
   padding: 10px;
   margin: 10px;

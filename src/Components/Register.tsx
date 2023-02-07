@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import OtpLayout from './OtpLayout'
+import OtpLayout from './OtpLayout1'
 
 function Register() {
     // State for OTP value

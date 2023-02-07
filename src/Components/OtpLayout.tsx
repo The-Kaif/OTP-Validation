@@ -1,198 +1,151 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import "./OtpLayout.css"
+import { otpContext } from '../App'
 // Type Define
 type OtpLayoutType = {
-    otp: number
-    method: any
+    method: any;
+    attempt: number
 }
 
 function OtpLayout(props: OtpLayoutType) {
-    // UseState for holds otp value
-    const [value, setValue] = useState("")
-    // useState for input boxes
-    const [input1, setInput1] = useState("")
-    const [input2, setInput2] = useState("")
-    const [input3, setInput3] = useState("")
-    const [input4, setInput4] = useState("")
-    const [input5, setInput5] = useState("")
-    // UseState for check number of resend attempts left
-    const [count, setCount] = useState(5)
-    // UseState for alert message popup
-    const [message, setMessage] = useState("")
+    let value: any = useContext(otpContext)
+    const [input, setInput] = useState<any>([])
+    const [refs, setRefs] = useState<any>([])
     // UseState for enable/disable button
     const [disable, setDisable] = useState(true)
+    const regexForValidation = /^[0-9\b]+$/
     // UseState for timer
-    const [timer, setTimer] = useState(60);
-    //flag UseState for check when user press resend buttton
-    const [flag, setFlag] = useState(false);
-
+    const [timer, setTimer] = useState(10);
+    const [press, setPress] = useState<any>(["1"])
+    // UseState for alert message popup
+    const [message, setMessage] = useState("")
+    const divRef: any = useRef()
     useEffect(() => {
-        // When page render so focus on first input box
-        if (input1 === "") {
-            document.getElementById("Input1")?.focus()
+        let tempOtp = JSON.stringify(value.otp);
+        setInput(tempOtp.split(""))
+        let temp: any = []
+        let res: any = []
+        let length = JSON.stringify(value.otp).length
+        while (length !== 0) {
+            temp.push(React.createRef())
+            length--
+            res.push("");
         }
-        let temp = JSON.stringify(props.otp)
-        // set OTP value into state
-        setValue(temp)
-        // Countdown function
-        let time = setTimeout(function () {
-            setTimer((val) => --val)
-        }, 1000)
-        // Clear Interval check
-        if (timer === 0) {
-            clearInterval(time)
+        if (refs.length !== 0) {
+            // divRef.current.addEventListener("shown.bs.modal", function () {
+            refs[0].current.focus()
+            // });
+        }
+        // divRef.current.addEventListener('shown.bs.modal', function () {
+        //     refs[0].current.focus()
+        // })
+        setRefs(temp)
+        setPress(res)
+
+    }, [value.otp])
+    useEffect(() => {
+        if (timer !== 0) {
+            setTimeout(() => {
+                setTimer((val) => --val)
+            }, 1000)
+        } else {
+            setTimer(0)
             setDisable(false)
         }
-        // When any input box value is blank then remove alert message
-        if (input1 === "" || input2 === "" || input3 === "" || input4 === "" || input5 === "") {
+        // if (JSON.stringify(input) === JSON.stringify(press)) {
+        //     setMessage("OTP sent successfully")
+        //     refs[refs.length - 1].current.blur()
+        // }
+    }, [timer])
+    console.log(refs)
+    const inputHandler = (e: React.ChangeEvent<HTMLInputElement>, index: any) => {
+        if (regexForValidation.test(refs[index].current.value) === true) {
+            if (refs[index].current.value !== "") {
+                setPress(press.splice(index, 1, refs[index].current.value))
+                setPress([...press])
+                MatchValues(index)
+                refs[index].current.nextSibling.focus()
+            }
+        } else {
+            refs[index].current.value = ""
+        }
+
+
+        // if (index === refs.length) {
+        //     setMessage("OTP is incorrect")
+        // }
+    }
+    const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: any) => {
+        const pressedKey = e.key;
+
+        if ((pressedKey === "Backspace" || pressedKey === "Delete") && refs[index].current.value === "") {
+            // refs[index].current.value = ""
+            setPress(press.splice(index, 1, ""))
+            setPress([...press])
+
+            refs[index - 1].current.focus()
+        } else if (pressedKey === "ArrowRight") {
+            refs[index + 1].current.focus()
+        } else if (pressedKey === "ArrowLeft") {
+            refs[index - 1].current.focus()
+        }
+        MatchValues(index)
+    }
+    function MatchValues(index: number) {
+        console.log("CHECK", input, press, index)
+        console.log("JSON", JSON.stringify(press));
+        console.log("CO", JSON.stringify(press).includes(''));
+        // for (let i = 0; i < press.length; i++) {
+        //     if (press[i] !== "") {
+        //         alert("YUP")
+        //     }
+
+        // }
+        if (JSON.stringify(input) === JSON.stringify(press)) {
+            setMessage("OTP sent successfully")
+            refs[refs.length - 1].current.blur()
+        } else if ((JSON.stringify(input) !== JSON.stringify(press)) && JSON.stringify(press).includes("") === true) {
+            setMessage("OTP is incorrect")
+        } else {
             setMessage("")
         }
-
-    }, [timer, disable, flag])
-    // Input 1 that take user input values
-    const input1Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // Validation Check
-        if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
-            setInput1(e.target.value)
-            if (e.target.value.length >= 1) {
-                document.getElementById("Input2")?.focus()
-            }
-        } else if (e.target.value.length === 0) {
-            setInput1("")
-        }
-    }
-    // Input 2 that take user input values
-    const input2Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // Validation Check
-        if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
-            setInput2(e.target.value)
-            if (e.target.value.length >= 1) {
-                document.getElementById("Input3")?.focus()
-            }
-        } else if (e.target.value.length === 0) {
-            setInput2("")
-            document.getElementById("Input1")?.focus()
-        }
-    }
-    // Input 3 that take user input values
-    const input3Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // Validation Check
-        if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
-            setInput3(e.target.value)
-            if (e.target.value.length >= 1) {
-                document.getElementById("Input4")?.focus()
-            }
-        } else if (e.target.value.length === 0) {
-            setInput3("")
-            document.getElementById("Input2")?.focus()
-        }
-    }
-    // Input 4 that take user input values
-    const input4Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // Validation Check
-        if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
-            setInput4(e.target.value)
-            if (e.target.value.length >= 1) {
-                document.getElementById("Input5")?.focus()
-            }
-        } else if (e.target.value.length === 0) {
-            setInput4("")
-            document.getElementById("Input3")?.focus()
-        }
-    }
-    // Input 5 that take user input values
-    const input5Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // Validation Check
-        if (parseInt(e.target.value) >= 0 && parseInt(e.target.value) <= 9) {
-            setInput5(e.target.value)
-            // Concat all input data
-            let tempVal = input1 + input2 + input3 + input4 + e.target.value
-            // When time is not equal to zero then match otherwise so alerts
-            if (timer !== 0) {
-                // Check with OTP value
-                if (tempVal === value) {
-                    setMessage("OTP sent successfully")
-                    document.getElementById("Input5")?.blur()
-                    setTimeout(function () {
-                        alert("Component Will Unmount")
-                        window.location.reload()
-                    }, 1000)
-                } else {
-                    setMessage("OTP is incorrect")
-                    document.getElementById("Input5")?.blur()
-                }
-            } else {
-                alert("Your OTP is expire please click on Resend OTP")
-            }
-
-        } else if (e.target.value.length === 0) {
-            setInput5("")
-            document.getElementById("Input4")?.focus()
-        }
-
     }
     // Resend OTP handler
     const resendHandler = () => {
-        if (count !== 0) {
-            alert("Resend OTP sent successfully!")
-            // Make resend button disable
+        if (props.attempt !== 0) {
+            setTimer(10)
             setDisable(true)
-            // Decrease Count by 1
-            setCount((val) => --val)
-            // Again Set Timer
-            setTimer(60)
-            // Call OTP generate method
             props.method()
-            // Set value into state
-            setValue(JSON.stringify(props.otp))
-            setFlag(true)
-            // Make Input fields blank
-            setInput1("");
-            setInput2("");
-            setInput3("");
-            setInput4("");
-            setInput5("");
-        } else {
-            alert("Resend OTP Limit exceed!!!")
+        } else if (props.attempt === 0) {
+            alert("Your resend attempts limit over !!")
+            setDisable(true)
         }
 
     }
+    // <input value={input1} onChange={input1Handler} maxLength={1} id="Input1" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "" : "rightVal"} />
     return (
-        <div>
-            <div className="d-grid gap-2 col-6 mx-auto title">
-                <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Validate OTP
-                </button>
-            </div>
-            <div className="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Verify Email Addres ({value})</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div ref={divRef} className="modal fade" id="myModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title" id="exampleModalLabel">Verify Email Addres({value.otp})</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div className="modal-body">
+                        <p>Enter Your Code Here :</p>
+                        {refs.map((val: any, index: any) => <input type={"text"} id="input" onKeyUp={(e) => handleOnKeyDown(e, index)} maxLength={1} onChange={(e) => inputHandler(e, index)} ref={refs[index]} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "" : "rightVal"} />)}
+                        {/* Alert Message Content */}
+                        {message !== "" ? <p className={message === "OTP is incorrect" ? "wrong" : "right"}>{message}</p> : null}
+                    </div>
+                    <div className="modal-footer">
+                        <div className='resendBtn'>
+                            {/* resend Button */}
+                            <button onClick={resendHandler} disabled={disable} type="button" className="btn btn-primary">Resend OTP</button>
                         </div>
-                        <div className="modal-body">
-                            <p>Enter Your Code Here : </p>
-                            {/* All Input Fields */}
-                            <div className='inputDiv'>
-                                <input value={input1} onChange={input1Handler} maxLength={1} id="Input1" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "" : "rightVal"} />
-                                <input value={input2} onChange={input2Handler} maxLength={1} id="Input2" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "" : "rightVal"} />
-                                <input value={input3} onChange={input3Handler} maxLength={1} id="Input3" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "" : "rightVal"} />
-                                <input value={input4} onChange={input4Handler} maxLength={1} id="Input4" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "" : "rightVal"} />
-                                <input value={input5} onChange={input5Handler} maxLength={1} id="Input5" type={"text"} className={message === "OTP is incorrect" ? "wrongVal" : message === "" ? "" : "rightVal"} />
-                            </div>
-                            {/* Alert Message Content */}
-                            {message !== "" ? <p className={message === "OTP is incorrect" ? "wrong" : "right"}>{message}</p> : null}
-                        </div>
-                        <div className="modal-footer">
-                            <div className='resendBtn'>
-                                {/* resend Button */}
-                                <button onClick={resendHandler} disabled={disable} type="button" className="btn btn-primary">Resend OTP</button>
-                            </div>
-                            ({count} Attempts left)
-                            {/* Timer */}
-                            <p className='timer'>{timer >= 0 && timer <= 9 ? `00:0${timer}` : `00:${timer}`}</p>
-                        </div>
+                        ({props.attempt} Attempts left)
+                        {/* Timer */}
+                        <p className='timer'>{timer >= 0 && timer <= 9 ? `00:0${timer}` : `00:${timer}`}</p>
+
                     </div>
                 </div>
             </div>
@@ -200,4 +153,4 @@ function OtpLayout(props: OtpLayoutType) {
     )
 }
 
-export default memo(OtpLayout) 
+export default OtpLayout
