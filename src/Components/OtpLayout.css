@@ -1,10 +1,7 @@
 .title {
   margin-top: 3em;
 }
-.inputs__div {
-  /* width: 80%; */
-  /* border: 1px solid black; */
-}
+
 /* Input Field CSS */
 .input {
   width: 2.6em;
@@ -17,14 +14,11 @@
 .timer {
   color: red;
 }
-.resend {
-  color: green;
-}
-
+.resend,
 .right {
   color: green;
 }
-
+/* CSS For Input Box Border */
 .wrongVal {
   border: 2px solid red;
 }
@@ -32,10 +26,7 @@
 .rightVal {
   border: 2px solid green;
 }
-.row {
-  display: flex;
-  justify-content: space-between;
-}
+
 /* Resend button CSS */
 .resendBtn {
   float: left;

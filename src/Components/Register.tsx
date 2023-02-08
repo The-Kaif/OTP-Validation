@@ -3,20 +3,23 @@ import React, { useCallback, useContext, useRef, useState } from "react";
 import { otpContext } from "../App";
 import OtpLayout from "./OtpLayout";
 
-function RegisterComponent() {
+function Register() {
+    // Ref for input fields
     const rangeRef: any = useRef(null);
+    // UseState for holds input value
     const [input, setInput] = useState("")
+    // UseContext that holds OTP number in state
     let value: any = useContext(otpContext);
+    // Regex For Valid Input Value
     const regexForRange = /^[4-7\b]+$/;
-
-
+    //Function That Get Input Value In State
     const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInput(e.target.value)
     }
-
-    const validateHandler = () => {
+    // Generate OTP according to user input value
+    const GenerateOTP = useCallback(() => {
         let otp = 0;
-        let number = parseInt(rangeRef.current.value);
+        let number = parseInt(input);
         let max = "9";
         let min = "1";
         while (number !== 1) {
@@ -26,13 +29,13 @@ function RegisterComponent() {
         }
         otp = Math.floor(Math.random() * parseInt(max) + parseInt(min));
         value.setOtp(otp)
-    };
+    }, [input]);
     return (
         <div>
             <center>
                 <div className="register__component">
-                    <h1>Register</h1>
-                    <div className="input-group mb-3">
+                    <h1 className="title">Pre Team Alignment Test</h1>
+                    <div className="input-group mb-3 mt-4">
                         <input
                             ref={rangeRef}
                             type="text"
@@ -58,11 +61,12 @@ function RegisterComponent() {
                     </div>
                 </div>
             </center>
+            {/* Call OtpLayout Component */}
             {Number(input) >= 4 && Number(input) <= 7 ? (
-                <OtpLayout digit={input} method={validateHandler} />
+                <OtpLayout digit={input} method={GenerateOTP} />
             ) : null}
         </div>
     );
 }
 
-export default RegisterComponent;
+export default Register;
