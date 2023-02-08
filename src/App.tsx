@@ -1,8 +1,7 @@
 // Import Component
-import Register from "./Components/Register";
+
 import RegisterComponent from "./Components/RegisterComponent";
 import "./App.css"
-import OtpLayout from "./Components/OtpLayout";
 import { createContext, useState } from "react";
 
 export const otpContext = createContext({})
