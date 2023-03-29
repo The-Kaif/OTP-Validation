@@ -34,7 +34,7 @@ function Register() {
         <div>
             <center>
                 <div className="register__component">
-                    <h1 className="title">Pre Team Alignment Test</h1>
+                    <h1 className="title">OTP VALIDATION</h1>
                     <div className="input-group mb-3 mt-4">
                         <input
                             ref={rangeRef}
